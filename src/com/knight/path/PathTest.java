@@ -1,5 +1,6 @@
 package com.knight.path;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -23,6 +24,7 @@ public class PathTest extends JFrame implements Runnable {
 	int generations = 1;
 	InputHandler input;
 	boolean running = true;
+	Grid grid;
 
 	public static void main(String[] args) {
 		test = new PathTest();
@@ -39,6 +41,19 @@ public class PathTest extends JFrame implements Runnable {
 
 	@Override
 	public void run() {
+		
+		grid = new Grid(10,10);
+		
+		for(int y =  3; y < 7; y++) {
+			grid.getGrid()[5][y] = new TileWall();
+		}
+		
+		grid.getGrid()[2][5] = new TileBot();
+		grid.getGrid()[8][5] = new TileTarget();
+		
+		PathFinder p = new PathFinder(grid);
+		p.FindPath(2, 5, 8, 5);
+		
 		long lastTime = System.currentTimeMillis();
 		long delta = System.currentTimeMillis() - lastTime;
 		long time = System.currentTimeMillis();
@@ -76,7 +91,13 @@ public class PathTest extends JFrame implements Runnable {
 		Graphics bbg = backbuffer.getGraphics();
 		bbg.clearRect(0, 0, getWidth(), getHeight());
 		
-		
+		for(int x = 0; x < grid.getWidth(); x++) {
+			for(int y = 0; y < grid.getHeight(); y++) {
+				if(grid.getGrid()[x][y] != null) bbg.setColor(grid.getGrid()[x][y].getColor());
+				else bbg.setColor(Color.WHITE);
+				bbg.fillRect(x * 50, y * 50, 50, 50);
+			}
+		}
 
 		g.drawImage(backbuffer, 0, 0, this);
 	}
