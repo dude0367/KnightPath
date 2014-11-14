@@ -13,7 +13,7 @@ public class Vector3i {
 	}
 	
 	public boolean equals(Vector3i comp) {
-		return comp.x == x && comp.y == y && comp.z == z;
+		return comp.x == x && comp.y == y;//NOTE: NO Z COMPARISON
 	}
 
 }

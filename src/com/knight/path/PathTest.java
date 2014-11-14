@@ -74,7 +74,7 @@ public class PathTest extends JFrame implements Runnable {
 			if (time > 0) { 
 				try {
 					Thread.sleep(time); 
-				} 
+				}
 				catch(Exception e){} 
 			}
 		}
