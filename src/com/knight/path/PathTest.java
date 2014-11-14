@@ -34,6 +34,7 @@ public class PathTest extends JFrame implements Runnable {
 		this.setSize(800, 600);
 		this.setTitle("Knight Pathing");
 		this.setVisible(true);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		thread = new Thread(this);
 		input = new InputHandler(this);
 		thread.start();
@@ -96,6 +97,8 @@ public class PathTest extends JFrame implements Runnable {
 				if(grid.getGrid()[x][y] != null) bbg.setColor(grid.getGrid()[x][y].getColor());
 				else bbg.setColor(Color.WHITE);
 				bbg.fillRect(x * 50, y * 50, 50, 50);
+				bbg.setColor(new Color(200, 150, 250));
+				bbg.drawString(x + "," + y, x * 50, y * 50);
 			}
 		}
 

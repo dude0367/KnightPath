@@ -1,5 +1,6 @@
 package com.knight.path;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class PathFinder {
@@ -11,6 +12,7 @@ public class PathFinder {
 	}
 	
 	public void FindPath(int x, int y, int targX, int targY) {
+		int steps = 0;
 		boolean reached = false;
 		ArrayList<Vector3i> open = new ArrayList<Vector3i>();
 		ArrayList<Vector3i> closed = new ArrayList<Vector3i>();
@@ -21,7 +23,7 @@ public class PathFinder {
 			open.addAll(getAdjacent(xx,yy,targX,targY));
 			Vector3i lowestF = open.get(0);
 			for(Vector3i v : open) {
-				if(v.z < lowestF.z && !closed.contains(v)) {
+				if(v.z < lowestF.z && !isClosed(closed, v)/* && v.x != x && v.y != y*/) {
 					lowestF = v;
 				}
 			}
@@ -29,18 +31,22 @@ public class PathFinder {
 			open.clear();//remove(lowestF);
 			xx = lowestF.x;
 			yy = lowestF.y;
+			steps++;
+			grid.getGrid()[lowestF.x][lowestF.y] = new TilePath();
+			System.out.println(steps + " steps");
+			grid.getGrid()[lowestF.x][lowestF.y].setColor(new Color(50 + 5 * (steps < 40 ? steps : 40), 50, 50));
 			if(xx == targX && yy == targY) reached = true;
 		}
-		for(Vector3i v : closed) {
-			grid.getGrid()[v.x][v.z] = new TilePath(); 
-		}
+		/*for(Vector3i v : closed) {
+			
+		}*/
 	}
 	
 	private ArrayList<Vector3i> getAdjacent(int x, int y, int targX, int targY) {
 		ArrayList<Vector3i> open = new ArrayList<Vector3i>();
 		for(int xMod = -1; xMod < 2; xMod++) {
 			for(int yMod = -1; yMod < 2; yMod++) {
-				if(Math.abs(xMod) != Math.abs(yMod) && !(grid.getGrid()[x + xMod][y + yMod] instanceof TileWall)) {
+				if((x + xMod >=0 && y + yMod >= 0 && x + xMod < grid.getWidth() && y + yMod < grid.getHeight()) && (Math.abs(xMod) != Math.abs(yMod) && !(grid.getGrid()[x + xMod][y + yMod] instanceof TileWall))) {
 					//System.out.println("Found tile @ " + (x + xMod) + "," + (y + yMod));
 					open.add(new Vector3i(x + xMod, y + yMod, Math.abs((x + xMod) - targX) + Math.abs((y + yMod) - targY)));
 				}
@@ -49,5 +55,9 @@ public class PathFinder {
 		return open;//WHY IS IT ALWAYS 2 ELEMENTS OF 5,5?
 	}
 	
+	boolean isClosed(ArrayList<Vector3i> closed, Vector3i vec) {
+		for(Vector3i v : closed) if(vec.equals(v)) return true;
+		return false;
+	}
 
 }
